@@ -17,7 +17,7 @@ def send_req(url):
 def get_photos(url):
     response = send_req(url)
     if response:
-        print(response.text)
+        pass
 
     else:
         return[]
