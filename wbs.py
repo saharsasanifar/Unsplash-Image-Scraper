@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import threading
 import os
 
 URL = "https://unsplash.com/"
@@ -53,7 +54,7 @@ def download_img(title, img_url, folder):
     response = send_req(img_url)
     if response:
         path = os.path.join(folder, title + ".jpg")
-        save_img(response.content, path)  #use content becuse it's photo and binarys
+        save_img(response.content, path)  #use content becuse it's photo and binary
     else:
         return None
     
@@ -65,10 +66,13 @@ def create_dir(path):
 
 
 #test for running_________________________________________________________
-photos = get_photos_data(URL)
-for photo in photos:
-    title = photo['title']
-    title = title.replace(" ", "_")
-    photo_dir = os.path.join(BASE_DIR, title)  #make the direction
-    create_dir(photo_dir)
-    download_img(photo['img_link'], photo_dir)
+
+if __name__ == "__main__":
+
+    photos = get_photos_data(URL)
+    for photo in photos:
+        title = photo['title']
+        title = title.replace(" ", "_")
+        photo_dir = os.path.join(BASE_DIR, title)  #make the direction
+        create_dir(photo_dir)
+        download_img(photo['img_link'], photo_dir)
