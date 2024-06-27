@@ -22,10 +22,10 @@ def get_photos_data(url):
     response = send_req(url)
     if response:
         soup = BeautifulSoup(response.text, 'html.parser')
-        photos = soup.find_all('div',class_="Mhnzm")
+        photos = soup.find_all('img')
         photos_data = []
         for photo in photos:
-            title = photo.find('a', class_="Prxeh")['title']
+            title = photo.img['alt']
             img_link = photo.find('img')['src']
             img_link = URL + img_link
             user_name = photo.find('span', class_="N25dY")['href']
@@ -53,7 +53,7 @@ def download_img(title, img_url, folder):
     response = send_req(img_url)
     if response:
         path = os.path.join(folder, title + ".jpg")
-        save_img(response.content, path)  #use content becuse it's photo and binarys
+        save_img(response.content, path)  #use content becuse it's photo and binary
     else:
         return None
     
