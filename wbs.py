@@ -62,13 +62,29 @@ def download_img(title, img_url, folder):
 def create_dir(path):
     if not os.path.exists(path):
         os.makedirs(path)
+
+
+
+#function for threading---------------------------------------------------------
+#multithreading the whole process is not optimized
+'''
+def main_func(url):
+    photos = get_photos_data(URL)
+    for photo in photos:
+        title = photo['title']
+        title = title.replace(" ", "_")
+        photo_dir = os.path.join(BASE_DIR, title)  #make the direction
+        create_dir(photo_dir)
+        download_img(photo['img_link'], photo_dir)
+'''
+
     
 
 
 #test for running_________________________________________________________
 
 if __name__ == "__main__":
-
+    
     photos = get_photos_data(URL)
     for photo in photos:
         title = photo['title']
