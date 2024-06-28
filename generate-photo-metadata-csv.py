@@ -3,7 +3,6 @@ import os  # For interacting with the operating system
 import shutil  # For file operations like moving files
 import sys  # Access to some variables used or maintained by the interpreter
 import requests  # To make HTTP requests to a specified URL
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QProgressBar, QFileDialog, QTextEdit
 import csv # For reading and writing CSV files
 
 # Variable to store your API token for authentication
@@ -50,74 +49,6 @@ def get_image_metadata(image_path, custom_context):
         print(f"Failed to fetch metadata. Check your API token. Status code: {response.status_code}")
     return None, None, []
 
-class ImageKeywordingTool(QWidget):
-    """
-    A graphical user interface (GUI) tool for processing a folder of images,
-    fetching metadata for each, and writing it back to the images.
-    """
-    def __init__(self):
-        super().__init__()
-        self.initUI()
 
-    def initUI(self):
-        # Set up the window title and size
-        self.setWindowTitle('Image Keywording Tool')
-        self.resize(600, 400)
-        layout = QVBoxLayout()
 
-        # Create UI elements: a text box for status messages, a button to select folders, and a progress bar
-        self.status_message = QTextEdit()
-        self.status_message.setPlainText("Processing Not Started")
-        self.status_message.setReadOnly(True)
-        self.select_folder_button = QPushButton('Select Folder')
-        self.select_folder_button.clicked.connect(self.start_processing)
-        self.progress_bar = QProgressBar()
-
-        # Add the UI elements to the layout
-        layout.addWidget(self.status_message)
-        layout.addWidget(self.select_folder_button)
-        layout.addWidget(self.progress_bar)
-        self.setLayout(layout)
-
-    def start_processing(self):
-        # Function to handle the folder selection and start processing images
-        selected_folder = QFileDialog.getExistingDirectory(self, "Select Folder")
-        if selected_folder:
-            self.status_message.setPlainText("Processing Running...")
-            self.process_images_in_folder(selected_folder)
-            self.status_message.append("Processing Completed")
-            self.status_message.append("Close Window to Exit")
-
-    def process_images_in_folder(self, folder_path):
-        images_to_process = [filename for filename in os.listdir(folder_path) if filename.lower().endswith(('.jpg', '.jpeg'))]
-        total_images = len(images_to_process)
-        processed_images = 0
-
-        # Open a CSV file to write the metadata
-        with open(os.path.join(folder_path, 'image_metadata.csv'), mode='w', newline='', encoding='utf-8') as csv_file:
-            writer = csv.writer(csv_file)
-            # Write the header row
-            writer.writerow(['Image Name', 'Title', 'Description', 'Keywords'])
-
-            for filename in images_to_process:
-                image_path = os.path.join(folder_path, filename)
-                custom_context = ' '.join([c for c in filename.split('.')[0].split('_') if c != 'g' and not c.isdigit()])
-                title, description, keywords = get_image_metadata(image_path, custom_context)
-                if title and keywords:
-                    # Write the image's metadata to the CSV file
-                    writer.writerow([filename, title, description, ', '.join(keywords)])
-
-                processed_images += 1
-                progress = processed_images / total_images * 100
-                self.progress_bar.setValue(int(round(progress)))
-                QApplication.processEvents()
-
-def main():
-    # Initialize and run the application
-    app = QApplication(sys.argv)
-    ex = ImageKeywordingTool()
-    ex.show()
-    sys.exit(app.exec_())
-
-if __name__ == '__main__':
-    main()
+   
