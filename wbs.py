@@ -23,10 +23,10 @@ def get_photos_data(url):
     response = send_req(url)
     if response:
         soup = BeautifulSoup(response.text, 'html.parser')
-        photos = soup.find_all('img')
+        photos = soup.find_all('div', class_='Mhnzm')
         photos_data = []
         for photo in photos:
-            title = photo.img['alt']
+            title = photo.find('a', class_="Prxeh")['title']
             img_link = photo.find('img')['src']
             img_link = URL + img_link
             user_name = photo.find('span', class_="N25dY")['href']
